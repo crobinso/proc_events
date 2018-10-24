@@ -30,8 +30,8 @@ process_events = {"PROC_EVENT_NONE": PROC_EVENT_NONE,
                   "PROC_EVENT_COMM": PROC_EVENT_COMM,
                   "PROC_EVENT_EXIT": PROC_EVENT_EXIT}
 
-process_events_rev = dict(zip(process_events.values(),
-                              process_events.keys()))
+process_events_rev = dict(list(zip(list(process_events.values()),
+                              list(process_events.keys()))))
 
 base_proc_event = struct.Struct("=2IL")
 
@@ -113,7 +113,7 @@ def pec_unpack(data):
     elif event[0] == PROC_EVENT_EXIT:
         fields += ["process_pid", "process_tgid", "exit_code", "exit_signal"]
 
-    return DictWrapper(zip(fields, tuple(event) + event_data))
+    return DictWrapper(list(zip(fields, tuple(event) + event_data)))
 
 def register_process(pid=None, process_name=None, events=(), action=None):
     """
@@ -144,7 +144,8 @@ def pec_loop(plist=process_list):
 
     try:
         pec_bind(s)
-    except socket.error, (_errno, errmsg):
+    except socket.error as xxx_todo_changeme:
+        (_errno, errmsg) = xxx_todo_changeme.args
         if _errno == errno.EPERM:
             raise Exception("You don't have permission to bind to the "
                             "process event connector. Try sudo.")

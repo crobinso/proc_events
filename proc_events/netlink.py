@@ -33,5 +33,5 @@ def netlink_pack(_type, flags, msg):
 
 def unpack_hdr(data):
     return DictWrapper(
-        zip(("len", "type", "flags", "seq", "pid"),
-            nlmsghdr.unpack(data[:nlmsghdr.size])))
+        list(zip(("len", "type", "flags", "seq", "pid"),
+            nlmsghdr.unpack(data[:nlmsghdr.size]))))

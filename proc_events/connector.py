@@ -46,6 +46,6 @@ def unpack_msg(data):
     """
     data = data[:cn_msg.size]  # Slice off trailing data
     return DictWrapper(
-        zip(("cb_idx", "cb_val", "seq", "ack", "len", "flags"),
-            cn_msg.unpack(data)))
+        list(zip(("cb_idx", "cb_val", "seq", "ack", "len", "flags"),
+            cn_msg.unpack(data))))
 

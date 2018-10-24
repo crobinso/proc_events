@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
 import errno
 import socket
 from select import select
 
-import proc_events
+import proc_events as pec
 from proc_events import netlink
 from proc_events import connector
 
@@ -13,13 +13,13 @@ def hex_dump(data):
     Print struct packed data in a way similar to 'x /Nbx <address>'
     in GDB.
     """
-    for i in xrange(len(data)):
-        print "0x%02x" % ord(data[i]),
+    for i in range(len(data)):
+        print("0x%02x" % ord(data[i]), end=' ')
         if i != 0 and not (i+1) % 8:
-            print
+            print()
         else:
-            print "  ",
-    print
+            print("  ", end=' ')
+    print()
 
 s = socket.socket(socket.AF_NETLINK,
                   socket.SOCK_DGRAM,
@@ -31,7 +31,8 @@ s = socket.socket(socket.AF_NETLINK,
 
 try:
     s.bind((os.getpid(), connector.CN_IDX_PROC))
-except socket.error as (_errno, errmsg):
+except socket.error as xxx_todo_changeme:
+    (_errno, errmsg) = xxx_todo_changeme.args
     if _errno == errno.EPERM:
         print ("You don't have permission to bind to the "
                "process event connector. Try sudo.")
@@ -45,7 +46,7 @@ while True:
     buf = readable[0].recv(256)
     event = pec.unpack(buf)
     event["what"] = pec.process_events_rev.get(event.what)
-    print event
+    print(event)
 
 pec.control(s, listen=False)
 
